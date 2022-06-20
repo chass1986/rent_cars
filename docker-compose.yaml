@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  web:
+    container_name: web
+    env_file: secret.conf
+    build:
+      context: .
+      dockerfile: DockerFile
+    restart: on-failure
+    command: >
+      bash -c "python app.py"
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_DB=rentcarsdb
+      - POSTGRES_USER=chouaib
+      - POSTGRES_PASSWORD=chouaibassid
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
